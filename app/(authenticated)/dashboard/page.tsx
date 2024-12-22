@@ -7,7 +7,7 @@ import TradeEntryForm from '@/components/dashboard/TradeEntryForm';
 import RiskCalculator from '@/components/dashboard/RiskCalculator';
 import TradingJournalModal from '@/components/dashboard/TradingJournalModal';
 import { Trade } from '@/lib/types/trade';
-import { BookOpenIcon } from '@heroicons/react/24/outline';
+import { BookOpenIcon, ChartBarIcon, PlusIcon } from '@heroicons/react/24/outline';
 
 // Sample data - replace with real data later
 const sampleTrades: Trade[] = [
@@ -81,34 +81,36 @@ const DashboardPage: FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-4 sm:py-8">
+      <div className="container mx-auto px-3 sm:px-4 max-w-7xl">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900">Dashboard</h1>
-            <p className="mt-2 text-gray-600">Your trading overview and quick actions</p>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 sm:mb-8 gap-4">
+          <div className="space-y-1">
+            <h1 className="text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+              Dashboard
+            </h1>
+            <p className="text-sm sm:text-base text-gray-600">Your trading overview and quick actions</p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full md:w-auto">
             <button
               onClick={() => setIsTradeFormOpen(true)}
-              className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm"
+              className="flex items-center justify-center px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow-md group"
             >
-              <span className="text-xl mr-2">+</span>
+              <PlusIcon className="w-4 sm:w-5 h-4 sm:h-5 mr-1.5 sm:mr-2 group-hover:scale-110 transition-transform" />
               Quick Trade
             </button>
             <button
               onClick={() => setIsJournalModalOpen(true)}
-              className="flex items-center px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors shadow-sm"
+              className="flex items-center justify-center px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white text-gray-700 rounded-xl border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 shadow-sm hover:shadow-md group"
             >
-              <BookOpenIcon className="w-5 h-5 mr-2" />
+              <BookOpenIcon className="w-4 sm:w-5 h-4 sm:h-5 mr-1.5 sm:mr-2 group-hover:scale-110 transition-transform" />
               Trading Journal
             </button>
           </div>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
           <StatsCard
             title="Win Rate"
             value="65%"
@@ -140,22 +142,35 @@ const DashboardPage: FC = () => {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Equity Chart */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Equity Curve</h2>
-              <EquityChart data={equityData} />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+          {/* Left Column - Chart */}
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6 lg:space-y-8">
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+              <div className="p-4 sm:p-6 border-b border-gray-100">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5 sm:space-y-1">
+                    <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Equity Curve</h2>
+                    <p className="text-xs sm:text-sm text-gray-500">Your account growth over time</p>
+                  </div>
+                  <ChartBarIcon className="w-5 sm:w-6 h-5 sm:h-6 text-gray-400" />
+                </div>
+              </div>
+              <div className="p-4 sm:p-6">
+                <EquityChart data={equityData} />
+              </div>
             </div>
           </div>
 
-          {/* Right Column */}
-          <div className="space-y-8">
-            {/* Risk Calculator */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Risk Calculator</h2>
-              <RiskCalculator />
+          {/* Right Column - Risk Calculator */}
+          <div className="space-y-4 sm:space-y-6 lg:space-y-8">
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200">
+              <div className="p-4 sm:p-6 border-b border-gray-100">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Risk Calculator</h2>
+                <p className="text-xs sm:text-sm text-gray-500 mt-0.5 sm:mt-1">Calculate your position size</p>
+              </div>
+              <div className="p-4 sm:p-6">
+                <RiskCalculator />
+              </div>
             </div>
           </div>
         </div>

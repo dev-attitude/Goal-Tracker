@@ -37,26 +37,26 @@ const contactInfo = [
   {
     Icon: EnvelopeIcon,
     label: 'Email',
-    value: 'support@goaltracker.com',
-    href: 'mailto:support@goaltracker.com',
+    value: 'dikuwa030@gmail.com',
+    href: 'mailto:dikuwa030@gmail.com',
   },
   {
     Icon: PhoneIcon,
     label: 'Phone',
-    value: '+1 (555) 123-4567',
-    href: 'tel:+15551234567',
+    value: '+264(81) 234 5678',
+    href: 'tel:+264(81) 234 5678',
   },
   {
     Icon: MapPinIcon,
     label: 'Office',
-    value: '123 Trading Street, San Francisco, CA 94105',
+    value: 'Divundu, Namibia',
     href: 'https://maps.google.com',
   },
   {
     Icon: GlobeAltIcon,
     label: 'Website',
     value: 'www.goaltracker.com',
-    href: 'https://www.goaltracker.com',
+    href: 'https://forexgoal-tracker.netlify.app/',
   },
 ];
 

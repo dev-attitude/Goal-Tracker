@@ -76,20 +76,20 @@ const GoalCard: FC<GoalCardProps> = ({ goal, onEdit, onArchive }) => {
 
   return (
     <Card className="group hover:shadow-lg transition-all duration-300 bg-white overflow-hidden">
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-4">
+      <div className="p-4 sm:p-6">
+        <div className="flex justify-between items-start mb-3 sm:mb-4">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
               {goal.title}
             </h3>
-            <p className="text-sm text-gray-500 mt-1 flex items-center">
-              <ClockIcon className="w-4 h-4 mr-1" />
+            <p className="text-xs sm:text-sm text-gray-500 mt-0.5 sm:mt-1 flex items-center">
+              <ClockIcon className="w-3 sm:w-4 h-3 sm:h-4 mr-1" />
               {goal.timeframe.charAt(0) + goal.timeframe.slice(1).toLowerCase()}
             </p>
           </div>
           <div className="flex items-center space-x-2">
             <span
-              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(
+              className={`inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(
                 goal.status
               )}`}
             >
@@ -99,15 +99,15 @@ const GoalCard: FC<GoalCardProps> = ({ goal, onEdit, onArchive }) => {
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           <div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium text-gray-500">Progress</span>
-              <span className="text-sm font-medium text-gray-900">
+            <div className="flex justify-between items-center mb-1.5 sm:mb-2">
+              <span className="text-xs sm:text-sm font-medium text-gray-500">Progress</span>
+              <span className="text-xs sm:text-sm font-medium text-gray-900">
                 {formatValue(goal.type, goal.current)} / {formatValue(goal.type, goal.target)}
               </span>
             </div>
-            <div className="relative h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+            <div className="relative h-1.5 sm:h-2 w-full bg-gray-100 rounded-full overflow-hidden">
               <Progress
                 value={goal.metrics.progress}
                 className={`h-full transition-all duration-500 ${getProgressColor(goal.metrics.progress)}`}
@@ -115,16 +115,16 @@ const GoalCard: FC<GoalCardProps> = ({ goal, onEdit, onArchive }) => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 pt-4 border-t">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 pt-3 sm:pt-4 border-t">
             <div>
-              <p className="text-sm text-gray-500">Trend</p>
-              <div className="flex items-center mt-1">
+              <p className="text-xs sm:text-sm text-gray-500">Trend</p>
+              <div className="flex items-center mt-0.5 sm:mt-1">
                 {goal.metrics.trend === 'up' ? (
-                  <ArrowUpIcon className="w-4 h-4 text-green-500 mr-1 animate-bounce" />
+                  <ArrowUpIcon className="w-3 sm:w-4 h-3 sm:h-4 text-green-500 mr-1 animate-bounce" />
                 ) : goal.metrics.trend === 'down' ? (
-                  <ArrowDownIcon className="w-4 h-4 text-red-500 mr-1 animate-bounce" />
+                  <ArrowDownIcon className="w-3 sm:w-4 h-3 sm:h-4 text-red-500 mr-1 animate-bounce" />
                 ) : null}
-                <span className="text-sm font-medium text-gray-900">
+                <span className="text-xs sm:text-sm font-medium text-gray-900">
                   {goal.metrics.trend === 'neutral'
                     ? 'No change'
                     : `${goal.metrics.trend === 'up' ? 'Improving' : 'Declining'}`}
@@ -132,8 +132,8 @@ const GoalCard: FC<GoalCardProps> = ({ goal, onEdit, onArchive }) => {
               </div>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Time Remaining</p>
-              <p className={`text-sm font-medium mt-1 ${
+              <p className="text-xs sm:text-sm text-gray-500">Time Remaining</p>
+              <p className={`text-xs sm:text-sm font-medium mt-0.5 sm:mt-1 ${
                 goal.metrics.daysRemaining <= 7 ? 'text-red-600' : 'text-gray-900'
               }`}>
                 {goal.metrics.daysRemaining} days
@@ -142,19 +142,19 @@ const GoalCard: FC<GoalCardProps> = ({ goal, onEdit, onArchive }) => {
           </div>
         </div>
 
-        <div className="flex justify-end space-x-3 mt-6 pt-4 border-t opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <div className="flex justify-end space-x-2 sm:space-x-3 mt-4 sm:mt-6 pt-3 sm:pt-4 border-t opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <button
             onClick={() => onArchive(goal.id)}
-            className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors"
+            className="inline-flex items-center text-xs sm:text-sm text-gray-500 hover:text-gray-700 transition-colors"
           >
-            <ArchiveBoxIcon className="w-4 h-4 mr-1" />
+            <ArchiveBoxIcon className="w-3 sm:w-4 h-3 sm:h-4 mr-1" />
             Archive
           </button>
           <button
             onClick={() => onEdit(goal)}
-            className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+            className="inline-flex items-center text-xs sm:text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
           >
-            <PencilIcon className="w-4 h-4 mr-1" />
+            <PencilIcon className="w-3 sm:w-4 h-3 sm:h-4 mr-1" />
             Edit
           </button>
         </div>

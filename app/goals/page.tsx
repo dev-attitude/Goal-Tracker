@@ -4,7 +4,8 @@ import { FC, useState } from 'react';
 import { Goal, GoalStatus } from '@/lib/types/goal';
 import GoalCard from '@/components/goals/GoalCard';
 import GoalForm from '@/components/goals/GoalForm';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
+import { motion } from 'framer-motion';
 
 // Sample data - replace with real data later
 const sampleGoals: Goal[] = [
@@ -47,6 +48,12 @@ const sampleGoals: Goal[] = [
     updatedAt: new Date(),
   },
 ];
+
+const fadeIn = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.4 }
+};
 
 const GoalsPage: FC = () => {
   const [goals, setGoals] = useState<Goal[]>(sampleGoals);
@@ -91,55 +98,99 @@ const GoalsPage: FC = () => {
     (goal) => selectedStatus === 'ALL' || goal.status === selectedStatus
   );
 
+  const getStatusColor = (status: GoalStatus | 'ALL') => {
+    switch (status) {
+      case 'ACTIVE':
+        return 'bg-blue-50 text-blue-700 ring-1 ring-blue-600/20 hover:bg-blue-100';
+      case 'COMPLETED':
+        return 'bg-green-50 text-green-700 ring-1 ring-green-600/20 hover:bg-green-100';
+      case 'FAILED':
+        return 'bg-red-50 text-red-700 ring-1 ring-red-600/20 hover:bg-red-100';
+      case 'ARCHIVED':
+        return 'bg-gray-50 text-gray-700 ring-1 ring-gray-600/20 hover:bg-gray-100';
+      default:
+        return 'bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-50';
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-4 sm:py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 space-y-4 sm:space-y-6">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900">Goals</h1>
-            <p className="mt-2 text-gray-600">Track and manage your trading goals</p>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+          <div className="space-y-0.5 sm:space-y-1">
+            <h1 className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+              Goals
+            </h1>
+            <p className="text-sm sm:text-base text-gray-600">Track and manage your trading goals</p>
           </div>
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => {
               setSelectedGoal(undefined);
               setIsFormOpen(true);
             }}
-            className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm"
+            className="flex items-center px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow-md group w-full sm:w-auto justify-center sm:justify-start"
           >
-            <PlusIcon className="w-5 h-5 mr-2" />
+            <PlusIcon className="w-4 sm:w-5 h-4 sm:h-5 mr-1.5 sm:mr-2 group-hover:scale-110 transition-transform" />
             New Goal
-          </button>
+          </motion.button>
         </div>
 
         {/* Filters */}
-        <div className="flex gap-2 mb-6">
+        <motion.div {...fadeIn} className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6">
           {(['ALL', 'ACTIVE', 'COMPLETED', 'FAILED', 'ARCHIVED'] as const).map((status) => (
-            <button
+            <motion.button
               key={status}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => setSelectedStatus(status)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 ${
                 selectedStatus === status
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'bg-white text-gray-600 hover:bg-gray-50'
+                  ? getStatusColor(status)
+                  : 'bg-white text-gray-600 hover:bg-gray-50 ring-1 ring-gray-200'
               }`}
             >
               {status === 'ALL' ? 'All Goals' : status.charAt(0) + status.slice(1).toLowerCase()}
-            </button>
+            </motion.button>
+          ))}
+        </motion.div>
+
+        {/* Goals Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+          {filteredGoals.map((goal, index) => (
+            <motion.div
+              key={goal.id}
+              {...fadeIn}
+              transition={{ delay: index * 0.1 }}
+            >
+              <GoalCard
+                goal={goal}
+                onEdit={handleEditGoal}
+                onArchive={handleArchiveGoal}
+              />
+            </motion.div>
           ))}
         </div>
 
-        {/* Goals Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredGoals.map((goal) => (
-            <GoalCard
-              key={goal.id}
-              goal={goal}
-              onEdit={handleEditGoal}
-              onArchive={handleArchiveGoal}
-            />
-          ))}
-        </div>
+        {/* Empty State */}
+        {filteredGoals.length === 0 && (
+          <motion.div
+            {...fadeIn}
+            className="text-center py-8 sm:py-12"
+          >
+            <div className="mx-auto w-16 sm:w-24 h-16 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+              <AdjustmentsHorizontalIcon className="w-8 sm:w-12 h-8 sm:h-12 text-gray-400" />
+            </div>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">No goals found</h3>
+            <p className="text-sm sm:text-base text-gray-500">
+              {selectedStatus === 'ALL'
+                ? "You haven't created any goals yet. Click 'New Goal' to get started!"
+                : `No ${selectedStatus.toLowerCase()} goals found. Try selecting a different filter.`}
+            </p>
+          </motion.div>
+        )}
 
         {/* Goal Form Modal */}
         <GoalForm

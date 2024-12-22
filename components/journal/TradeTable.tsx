@@ -7,6 +7,7 @@ import {
   ArrowDownIcon,
   PencilIcon,
   TrashIcon,
+  ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 
 interface TradeTableProps {
@@ -21,6 +22,7 @@ type SortDirection = 'asc' | 'desc';
 const TradeTable: FC<TradeTableProps> = ({ trades, onEdit, onDelete }) => {
   const [sortField, setSortField] = useState<SortField>('date');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const [expandedTrade, setExpandedTrade] = useState<string | null>(null);
 
   const handleSort = (field: SortField) => {
     if (field === sortField) {
@@ -63,9 +65,105 @@ const TradeTable: FC<TradeTableProps> = ({ trades, onEdit, onDelete }) => {
     }
   };
 
+  // Mobile view for each trade
+  const MobileTradeCard = ({ trade }: { trade: Trade }) => {
+    const isExpanded = expandedTrade === trade.id;
+
+    return (
+      <div className="p-4 border-b border-gray-200 last:border-b-0">
+        <div 
+          className="flex items-start justify-between cursor-pointer"
+          onClick={() => setExpandedTrade(isExpanded ? null : trade.id)}
+        >
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-gray-900">{trade.pair}</span>
+              <span className={`text-xs font-medium ${trade.type === 'LONG' ? 'text-green-600' : 'text-red-600'}`}>
+                {trade.type}
+              </span>
+            </div>
+            <div className="text-xs text-gray-500">
+              {format(new Date(trade.date), 'MMM dd, yyyy HH:mm')}
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="text-right">
+              <div className={`text-sm font-medium ${trade.pnl && trade.pnl > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                ${trade.pnl?.toFixed(2) || '-'}
+              </div>
+              <div className="text-xs text-gray-500">
+                {trade.pips?.toFixed(1) || '-'} pips
+              </div>
+            </div>
+            <ChevronRightIcon 
+              className={`w-4 h-4 text-gray-400 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+            />
+          </div>
+        </div>
+
+        {isExpanded && (
+          <div className="mt-4 space-y-3 text-sm">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <div className="text-xs font-medium text-gray-500">Entry Price</div>
+                <div className="text-gray-900">{trade.entryPrice.toFixed(5)}</div>
+              </div>
+              <div>
+                <div className="text-xs font-medium text-gray-500">Exit Price</div>
+                <div className="text-gray-900">{trade.exitPrice?.toFixed(5) || '-'}</div>
+              </div>
+              <div>
+                <div className="text-xs font-medium text-gray-500">Status</div>
+                <div className={getOutcomeColor(trade.outcome)}>{trade.outcome}</div>
+              </div>
+              <div>
+                <div className="text-xs font-medium text-gray-500">Strategy</div>
+                <div className="text-gray-900">{trade.strategy}</div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit?.(trade);
+                }}
+                className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+              >
+                <PencilIcon className="w-4 h-4" />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete?.(trade.id);
+                }}
+                className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+              >
+                <TrashIcon className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <Card className="overflow-hidden">
-      <div className="overflow-x-auto">
+      {/* Mobile View */}
+      <div className="sm:hidden divide-y divide-gray-200">
+        {sortedTrades.map((trade) => (
+          <MobileTradeCard key={trade.id} trade={trade} />
+        ))}
+        {sortedTrades.length === 0 && (
+          <div className="p-4 text-center text-sm text-gray-500">
+            No trades found
+          </div>
+        )}
+      </div>
+
+      {/* Desktop View */}
+      <div className="hidden sm:block overflow-x-auto">
         <table className="w-full">
           <thead className="bg-gray-50">
             <tr>
@@ -177,20 +275,27 @@ const TradeTable: FC<TradeTableProps> = ({ trades, onEdit, onDelete }) => {
                   <div className="flex justify-end space-x-2">
                     <button
                       onClick={() => onEdit?.(trade)}
-                      className="text-blue-600 hover:text-blue-900"
+                      className="text-blue-600 hover:text-blue-900 p-1 hover:bg-blue-50 rounded-lg transition-colors duration-200"
                     >
-                      <PencilIcon className="w-5 h-5" />
+                      <PencilIcon className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => onDelete?.(trade.id)}
-                      className="text-red-600 hover:text-red-900"
+                      className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded-lg transition-colors duration-200"
                     >
-                      <TrashIcon className="w-5 h-5" />
+                      <TrashIcon className="w-4 h-4" />
                     </button>
                   </div>
                 </td>
               </tr>
             ))}
+            {sortedTrades.length === 0 && (
+              <tr>
+                <td colSpan={9} className="px-6 py-4 text-center text-sm text-gray-500">
+                  No trades found
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

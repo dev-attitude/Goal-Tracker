@@ -21,7 +21,7 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-[url('/images/chart-pattern.svg')] bg-repeat opacity-[0.02]" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left Column - Content */}
           <div className="space-y-8">

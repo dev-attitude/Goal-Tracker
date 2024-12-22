@@ -41,7 +41,7 @@ export default function ClientLayout({
     return (
       <>
         <Navbar />
-        <div className="min-h-screen pt-16">
+        <div className="min-h-screen pt-[64px]">
           {children}
         </div>
         {isPublicPath && <Footer />}
@@ -54,9 +54,9 @@ export default function ClientLayout({
     <>
       <Navbar />
       <div className="flex min-h-screen bg-gray-100 pt-16">
-        {/* Sidebar */}
+        {/* Sidebar - Hidden on mobile */}
         <aside 
-          className="group fixed inset-y-16 z-40 flex w-72 flex-col transition-all duration-300 hover:w-72 data-[collapsed=true]:w-[60px] bg-white border-r border-gray-200"
+          className="group fixed inset-y-16 z-40 hidden md:flex w-72 flex-col transition-all duration-300 hover:w-72 data-[collapsed=true]:w-[60px] bg-white border-r border-gray-200"
           data-collapsed={isCollapsed}
         >
           {/* Navigation */}
@@ -88,8 +88,8 @@ export default function ClientLayout({
           </button>
         </aside>
 
-        {/* Main content */}
-        <main className={`flex-1 transition-all duration-300 ${isCollapsed ? 'pl-[60px]' : 'pl-72'}`}>
+        {/* Main content - Full width on mobile */}
+        <main className={`flex-1 transition-all duration-300 md:${isCollapsed ? 'pl-[60px]' : 'pl-72'}`}>
           <div className="py-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-6xl mx-auto">
               {children}
